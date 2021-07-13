@@ -4,10 +4,12 @@ import Heading from './components/Heading'
 import Search from  './components/Search'
 import MovieList from './components/MovieList'
 import AddFavorites from './components/AddFavorites'
+import RemoveFavorites from './components/RemoveFavorites'
 import './App.css';
 
 const App = () => {
   const [movies, setMovies] = useState([])
+  const [favorites, setFavorites] = useState([])
   const [searchValue, setSearchValue] = useState('');
   
   const getMovieRequest = async (searchValue) => {
@@ -24,6 +26,14 @@ const App = () => {
   getMovieRequest(searchValue);
   },[searchValue])
   
+  const addFavoriteMovie = (movie)=> {
+    const newFavoriteList = [...favorites, movie]
+    setFavorites(newFavoriteList)
+  }
+  const removeFavoriteMovie = (movie)=>{
+    const newFavoriteList = favorites.filter((favorite)=> favorite.imdbID !== movie.imdbID)
+    setFavorites(newFavoriteList)
+  }
 return (
   <div className="container-fluid movie-app">
     <div className="row d-flex align-items-center mt-3 mb-3">
@@ -31,7 +41,19 @@ return (
      <Search value={searchValue} setter={setSearchValue}/>
     </div>
     <div className='row'> 
-    <MovieList movies={movies} favoriteComponent={AddFavorites}/> 
+    <MovieList 
+    movies={movies} 
+    favoriteComponent={AddFavorites} 
+    favoriteHandler={addFavoriteMovie}/> 
+    </div>
+    <div className="row d-flex align-items-center mt-3 mb-3">
+     <Heading heading={"Favorites"}/>
+    </div>
+    <div className='row'> 
+    <MovieList 
+    movies={favorites} 
+    favoriteComponent={RemoveFavorites} 
+    favoriteHandler={removeFavoriteMovie}/> 
     </div>
   </div>
 );
