@@ -22,17 +22,31 @@ const App = () => {
       setMovies(responseJson.Search)
     } 
  }
- useEffect(()=>{
-  getMovieRequest(searchValue);
-  },[searchValue])
+    useEffect(()=>{
+    getMovieRequest(searchValue);
+    },[searchValue])
+    useEffect (()=>{
+      const movieFavorites = JSON.parse(localStorage.getItem('react-movie-app-favorites'))
+      if (movieFavorites) {
+        setFavorites(movieFavorites);
+      }
+      },[])
+
+
+  const saveToLocalStorage =(items)=>{
+    //Convert a JavaScript object into a string with JSON.stringify()
+    localStorage.setItem('react-movie-app-favorites', JSON.stringify(items))
+  }
   
   const addFavoriteMovie = (movie)=> {
     const newFavoriteList = [...favorites, movie]
     setFavorites(newFavoriteList)
+    saveToLocalStorage(newFavoriteList)
   }
   const removeFavoriteMovie = (movie)=>{
     const newFavoriteList = favorites.filter((favorite)=> favorite.imdbID !== movie.imdbID)
     setFavorites(newFavoriteList)
+    saveToLocalStorage(newFavoriteList)
   }
 return (
   <div className="container-fluid movie-app">
@@ -47,7 +61,7 @@ return (
     favoriteHandler={addFavoriteMovie}/> 
     </div>
     <div className="row d-flex align-items-center mt-3 mb-3">
-     <Heading heading={"Favorites"}/>
+     <Heading heading={"Favourites"}/>
     </div>
     <div className='row'> 
     <MovieList 
