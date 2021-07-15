@@ -6,6 +6,7 @@ import MovieList from './components/MovieList'
 import AddFavorites from './components/AddFavorites'
 import RemoveFavorites from './components/RemoveFavorites'
 import './App.css';
+require('dotenv').config()
 
 const App = () => {
   const [movies, setMovies] = useState([])
@@ -13,7 +14,7 @@ const App = () => {
   const [searchValue, setSearchValue] = useState('');
   
   const getMovieRequest = async (searchValue) => {
-  const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=8c76283b`;
+  const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`;
   const response = await fetch(url);
   const responseJson = await response.json();
   //if searchValue is empty do not call setSearchValue
