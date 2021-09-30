@@ -17,21 +17,29 @@ const App = () => {
   const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`;
   const response = await fetch(url);
   const responseJson = await response.json();
+  
   //if searchValue is empty do not call setSearchValue
     if (responseJson.Search){
+        const promises = responseJson.Search.map(async (movie) => {
+        const urlMovie = `http://www.omdbapi.com/?i=${movie.imdbID}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`;
+        const result = await fetch(urlMovie);
+        const resultJson = await result.json();
+          return resultJson;
+      });
+      const movieResult = await Promise.all(promises);
+
       //search property of responseJson object
-      setMovies(responseJson.Search)
+      setMovies(movieResult)
     } 
  }
-    useEffect(()=>{
+  useEffect(()=>{
     getMovieRequest(searchValue);
     },[searchValue])
     
-    useEffect (()=>{
+  useEffect (()=>{
       const movieFavorites = JSON.parse(localStorage.getItem('react-movie-app-favorites'))
       if (movieFavorites) {
-        setFavorites(movieFavorites);
-      }
+        setFavorites(movieFavorites);}
       },[])
 
 
